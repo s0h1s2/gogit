@@ -15,7 +15,7 @@ type ObjTag string
 
 const (
 	BLOB ObjTag = "blob"
-	TREE        = "TREE"
+	TREE        = "tree"
 )
 
 func getRepoPath() string {

@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
-	"log"
 	"os"
 	"path"
 )
@@ -14,6 +13,12 @@ func createHashObject(content []byte, tag ObjTag) string {
 	content = append([]byte(tag+"\x00"), content...)
 	h.Write(content)
 	oid := hex.EncodeToString(h.Sum(nil))
+	f, err := os.Create(path.Join(getRepoPath(), OBJECTS_DIR_NAME, oid))
+	defer f.Close()
+	if err != nil {
+		panic(err.Error())
+	}
+	f.Write(content)
 	return oid
 }
 func createHashObjectFile(filePath string, tag ObjTag) string {
@@ -26,12 +31,6 @@ func createHashObjectFile(filePath string, tag ObjTag) string {
 		panic(err)
 	}
 	oid := createHashObject(content, tag)
-	f, err := os.Create(path.Join(getRepoPath(), OBJECTS_DIR_NAME, oid))
-	defer f.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-	f.WriteString(string(content))
 	return oid
 }
 func CreateBlobHashObject(hashobj *HashObjectCmd) {

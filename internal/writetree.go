@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -23,17 +24,31 @@ func writeTreeObject(path string) string {
 		println(err.Error())
 		os.Exit(1)
 	}
+	entries := make([]node, 0, 4)
 	for _, file := range files {
 		fullPath := filepath.Join(path, file.Name())
 		if file.Name() == GOGIT_DIR_NAME || file.Name() == ".git" {
 			continue
 		}
-		if file.IsDir() {
-			writeTreeObject(fullPath)
+		if !file.IsDir() {
+			// content, err := os.ReadFile(fullPath)
+			if err != nil {
+				println(err.Error())
+				os.Exit(1)
+			}
+			oid := createHashObjectFile(fullPath, BLOB)
+			entries = append(entries, node{oid: oid, name: file.Name(), tag: BLOB})
+		} else {
+			oid := writeTreeObject(fullPath)
+			entries = append(entries, node{oid: oid, name: file.Name(), tag: TREE})
 		}
-		println(fullPath)
 	}
-	return "Hello"
+	tree := ""
+	for _, entry := range entries {
+		tree += fmt.Sprintf("%s %s %s\n", entry.tag, entry.oid, entry.name)
+	}
+	return createHashObject([]byte(tree), TREE)
+
 }
 func WriteTree() {
 	writeTreeObject(".")
