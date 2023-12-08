@@ -52,16 +52,4 @@ func writeTreeObject(path string) string {
 }
 func WriteTree() {
 	writeTreeObject(".")
-	// filepath.Walk(".", func(path string, entry fs.FileInfo, err error) error {
-	// 	if err != nil {
-	// 		println(err)
-	// 		return err
-	// 	}
-	// 	// entries := make([]node, 0)
-	// 	if entry.IsDir() && (entry.Name() == GOGIT_DIR_NAME || entry.Name() == ".git") {
-	// 		return filepath.SkipDir
-	// 	}
-	// 	println(createHashObject([]byte(entry.Name()), BLOB))
-	// 	return nil
-	// })
 }

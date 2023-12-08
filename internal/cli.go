@@ -6,6 +6,8 @@ type HashObjectCmd struct {
 	FilePath string `arg:"positional" placeholder:"FILE"`
 }
 type HashCatCmd struct {
-	Hash string `arg:"positional" placeholder:"HASH"`
+	Type string `arg:"positional"`
+	Hash string `arg:"positional"`
 }
 type WriteTreeCmd struct{}
+type ReadTreeCmd struct{}
